@@ -2,6 +2,8 @@ defmodule RatingGameWeb.SurveyLive do
   use RatingGameWeb, :live_view
   alias RatingGame.Accounts
   alias RatingGame.Catalog
+  on_mount RatingGameWeb.UserLiveAuth
+
   def mount(_params, %{"user_token" => user_token}, socket) do
     current_user = Accounts.get_user_by_session_token(user_token)
 

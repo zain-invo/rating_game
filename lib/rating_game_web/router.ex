@@ -2,6 +2,7 @@ defmodule RatingGameWeb.Router do
   use RatingGameWeb, :router
 
   import RatingGameWeb.UserAuth
+  alias RatingGameWeb.UserLiveAuth
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -62,6 +63,8 @@ defmodule RatingGameWeb.Router do
   scope "/", RatingGameWeb do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
+    live "/users/register_live", UserRegistrationLive.New, :new
+    live "/users/login", UserSessionLive.Login, :login
     get "/users/register", UserRegistrationController, :new
     post "/users/register", UserRegistrationController, :create
     get "/users/log_in", UserSessionController, :new
@@ -79,11 +82,13 @@ defmodule RatingGameWeb.Router do
     put "/users/settings", UserSettingsController, :update
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
-    live "/games", GameLive.Index, :index
-    live "/games/new", GameLive.Index, :new
-    live "/games/:id/edit", GameLive.Index, :edit
-    live "/games/:id", GameLive.Show, :show
-    live "/games/:id/show/edit", GameLive.Show, :edit
+    live_session :admin, on_mount: {UserLiveAuth, :admin} do
+      live "/games", GameLive.Index, :index
+      live "/games/new", GameLive.Index, :new
+      live "/games/:id/edit", GameLive.Index, :edit
+      live "/games/:id", GameLive.Show, :show
+      live "/games/:id/show/edit", GameLive.Show, :edit
+    end
 
     live "/survey", SurveyLive, :index
 
