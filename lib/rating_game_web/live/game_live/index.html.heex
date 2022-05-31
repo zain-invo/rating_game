@@ -37,3 +37,5 @@
 </table>
 
 <span><%= live_patch "New Game", to: Routes.game_index_path(@socket, :new) %></span>
+<span><%= live_redirect "Ratings", to: Routes.survey_path(@socket, :index) %></span>
+

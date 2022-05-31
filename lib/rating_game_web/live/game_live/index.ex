@@ -3,6 +3,7 @@ defmodule RatingGameWeb.GameLive.Index do
 
   alias RatingGame.Catalog
   alias RatingGame.Catalog.Game
+  # on_mount RatingGameWeb.UserLiveAuth
 
   @impl true
   def mount(_params, _session, socket) do

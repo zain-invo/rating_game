@@ -1,13 +1,14 @@
 defmodule RatingGame.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias RatingGame.Accounts.UserRole
 
   schema "users" do
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
-
+    field :role, UserRole, default: :user
     timestamps()
   end
 
@@ -30,7 +31,7 @@ defmodule RatingGame.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :role])
     |> validate_email()
     |> validate_password(opts)
   end
@@ -136,5 +137,12 @@ defmodule RatingGame.Accounts.User do
     else
       add_error(changeset, :current_password, "is not valid")
     end
+  end
+
+  def login_changeset(user, attrs, _opts \\ []) do
+    user
+    |> cast(attrs, [:email, :password])
+    |> validate_required([:email, :password])
+    |> validate_format(:email, ~r/^[a-z0-9._-]+@[a-z]+\.[a-z]{2,6}$/, message: "Enter a valid email address")
   end
 end

@@ -1,10 +1,14 @@
 <ul>
 <%= if @current_user do %>
   <li><%= @current_user.email %></li>
+  <%= if @current_user.role in [:admin, :super_admin] do %>
+    <li><%= link "Games", to: Routes.game_index_path(@conn, :index) %></li>
+  <% end %>
+  <li><%= link "Survey", to: Routes.survey_path(@conn, :index) %></li>
   <li><%= link "Settings", to: Routes.user_settings_path(@conn, :edit) %></li>
   <li><%= link "Log out", to: Routes.user_session_path(@conn, :delete), method: :delete %></li>
 <% else %>
-  <li><%= link "Register", to: Routes.user_registration_path(@conn, :new) %></li>
-  <li><%= link "Log in", to: Routes.user_session_path(@conn, :new) %></li>
+  <li><%= link "Register", to: Routes.user_registration_new_path(@conn, :new) %></li>
+  <li><%= link "Log in", to: Routes.user_session_login_path(@conn, :login) %></li>
 <% end %>
 </ul>
